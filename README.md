@@ -1,5 +1,8 @@
 # movies-ticketting-app-backend
 
+- This is a backend of a ticketting app built on Nodejs, expressjs, MongoDB with a few other third party packages
+- Refer the documentation section below to learn more
+
 ## How to contribute
 
 - Clone the repository: `git clone <url>`

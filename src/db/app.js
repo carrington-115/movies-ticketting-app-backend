@@ -1,10 +1,14 @@
 const { connectToDb } = require("./dbSetup.config");
+const { getAllUsers } = require("./users");
 
 const main = async () => {
   try {
     await connectToDb();
-    console.log("The database is connected");
+    const users = await getAllUsers();
+    console.log(users);
   } catch (error) {
     console.error(error);
   }
 };
+
+main();
