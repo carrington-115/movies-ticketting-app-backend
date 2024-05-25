@@ -30,31 +30,16 @@ const getAllUsers = async () => {
 };
 const getUsersByQuery = async (userData) => {
   session.startTransaction();
+  const { id, name, email } = userData;
   try {
     const usersCollection = client.db("sample_mflix").collection("users");
     let usersQueryResults;
-    if (userData?.id !== "") {
-      {
-        usersQueryResults = usersCollection.aggregate([
-          {
-            $match: {
-              _id: new ObjectId(userData?.id),
-              name: userData?.name,
-              email: userData?.email,
-            },
-          },
-        ]);
-      }
-    } else {
-      usersQueryResults = usersCollection.aggregate([
-        {
-          $match: {
-            name: userData?.name,
-            email: userData?.email,
-          },
-        },
-      ]);
-    }
+    usersQueryResults = await usersCollection.findOne({
+      _id: new ObjectId(id),
+      name: name,
+      email: email,
+    });
+
     await session.commitTransaction();
     return usersQueryResults;
   } catch (error) {

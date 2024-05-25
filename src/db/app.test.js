@@ -2,23 +2,13 @@ const { getAllUsers, getUsersByQuery } = require("./users");
 
 const testFunc = async () => {
   try {
-    // const users = await getAllUsers();
-    // users.forEach((user) => {
-    //   const { id, name, email, password } = user;
-    //   console.log(`
-    //     id: ${id}
-    //     name: ${name}
-    //     email: ${email}clear
-    //     password: ${password}
-    //     `);
-    // });
-
-    const users = await getUsersByQuery({
-      name: "Maester Luwin",
-      email: "",
-      id: "",
+    const user = await getUsersByQuery({
+      id: "59b99db6cfa9a34dcd7885bc",
+      name: "Jorah Mormont",
+      email: "iain_glen@gameofthron.es",
     });
-    users.forEach((user) => console.log(user));
+
+    console.log(user);
   } catch (error) {
     console.error(error);
   }
