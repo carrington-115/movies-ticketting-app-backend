@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { client } = require("../client.config");
 const session = client.startSession();
 
@@ -33,6 +34,28 @@ const getAllMovies = async () => {
     ]);
     await session.commitTransaction();
     return allMovies;
+  } catch (error) {
+    console.error(error);
+    await session.abortTransaction();
+  } finally {
+    await session.endSession();
+  }
+};
+
+const getMoviesWithId = async (userData) => {
+  session.startTransaction();
+  const { id } = userData;
+  try {
+    const allMovies = client.db("sample_mflix").collection("movies");
+    const movie = allMovies.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(id),
+        },
+      },
+    ]);
+    await session.commitTransaction();
+    return movie;
   } catch (error) {
     console.error(error);
     await session.abortTransaction();
