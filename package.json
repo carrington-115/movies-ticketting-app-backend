@@ -1,0 +1,17 @@
+{
+  "name": "movies-ticketting-app-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "expressjs": "^1.0.1",
+    "mongodb": "^6.6.2",
+    "nodemon": "^3.1.0"
+  }
+}
