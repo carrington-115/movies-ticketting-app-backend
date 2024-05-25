@@ -27,10 +27,21 @@ const getAllUsers = async () => {
     await session.endSession();
   }
 };
-const getUsersByQuery = async () => {
+const getUsersByQuery = async (name, email, id) => {
   session.startTransaction();
   try {
+    const usersCollection = client.db("sample_mflix").collection("users");
+    const usersQueryResults = usersCollection.aggregate([
+      {
+        $match: {
+          id: id,
+          name: name,
+          email: email,
+        },
+      },
+    ]);
     await session.commitTransaction();
+    return usersQueryResults;
   } catch (error) {
     console.error(error);
     await session.abortTransaction();
