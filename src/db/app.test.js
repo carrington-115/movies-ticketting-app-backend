@@ -1,4 +1,4 @@
-const { getAllUsers } = require("./users");
+const { getAllUsers, getUsersByQuery } = require("./users");
 
 const testFunc = async () => {
   try {
@@ -12,6 +12,13 @@ const testFunc = async () => {
     //     password: ${password}
     //     `);
     // });
+
+    const queriedUsers = await getUsersByQuery({
+      name: "Maester Luwin",
+      email: "",
+      id: "",
+    });
+    queriedUsers.forEach((user) => console.log(user));
   } catch (error) {
     console.error(error);
   }

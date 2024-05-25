@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { client } = require("./client.config");
 
 const session = client.startSession();
@@ -27,19 +28,33 @@ const getAllUsers = async () => {
     await session.endSession();
   }
 };
-const getUsersByQuery = async (name, email, id) => {
+const getUsersByQuery = async (userData) => {
   session.startTransaction();
   try {
     const usersCollection = client.db("sample_mflix").collection("users");
-    const usersQueryResults = usersCollection.aggregate([
+    const usersQueryResults = [];
+    if (userData?.id !== "") {
       {
-        $match: {
-          id: id,
-          name: name,
-          email: email,
+        usersQueryResults = usersCollection.aggregate([
+          {
+            $match: {
+              _id: new ObjectId(userData?.id),
+              name: userData?.name,
+              email: userData?.email,
+            },
+          },
+        ]);
+      }
+    } else {
+      usersQueryResults = usersCollection.aggregate([
+        {
+          $match: {
+            name: userData?.name,
+            email: userData?.email,
+          },
         },
-      },
-    ]);
+      ]);
+    }
     await session.commitTransaction();
     return usersQueryResults;
   } catch (error) {
