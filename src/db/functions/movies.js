@@ -8,6 +8,21 @@ const session = client.startSession();
     * We can get movies by querying
     * id, plot, genres, title, released, writers, year, lastupdated
 */
+const movieOutput = {
+  _id: 1,
+  plot: 1,
+  genres: 1,
+  cast: 1,
+  poster: 1,
+  title: 1,
+  fullplot: 1,
+  released: 1,
+  directors: 1,
+  writers: 1,
+  lastupdated: 1,
+  year: 1,
+  countries: 1,
+};
 
 const getAllMovies = async () => {
   session.startTransaction();
@@ -16,20 +31,7 @@ const getAllMovies = async () => {
     const allMovies = moviesCollection.aggregate([
       { $limit: 50 },
       {
-        $project: {
-          _id: 1,
-          plot: 1,
-          genres: 1,
-          cast: 1,
-          poster: 1,
-          title: 1,
-          fullplot: 1,
-          released: 1,
-          directors: 1,
-          writers: 1,
-          lastupdated: 1,
-          year: 1,
-        },
+        $project: movieOutput,
       },
     ]);
     await session.commitTransaction();
@@ -53,6 +55,7 @@ const getMoviesWithId = async (userData) => {
           _id: new ObjectId(id),
         },
       },
+      { $project: movieOutput },
     ]);
     await session.commitTransaction();
     return movie;
@@ -64,4 +67,4 @@ const getMoviesWithId = async (userData) => {
   }
 };
 
-module.exports = { getAllMovies };
+module.exports = { getAllMovies, getMoviesWithId };
