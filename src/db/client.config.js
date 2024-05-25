@@ -1,5 +1,5 @@
-const { MongoClient } = require("express");
+const { MongoClient } = require("mongodb");
 const { dbKey } = require("./dbKey.config");
-const client = MongoClient(dbKey);
+const client = new MongoClient(dbKey);
 
 module.exports = { client };
