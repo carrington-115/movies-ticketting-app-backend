@@ -1,14 +1,15 @@
+require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const { dbKey } = require("./dbKey.config");
 const client = new MongoClient(dbKey);
 
 const connectToDb = async () => {
   try {
-    await client.connectToDb();
-    console.log("connected to the database");
+    await client.connect();
+    console.log("\n\nConnected to the database\n\n");
   } catch (error) {
     console.error(error);
   }
 };
 
-module.exports = [connectToDb];
+module.exports = { connectToDb };
