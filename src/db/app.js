@@ -5,7 +5,7 @@ const { connectToDb } = require("./dbSetup.config");
 const main = async () => {
   try {
     await connectToDb();
-    testFunc();
+    await testFunc();
   } catch (error) {
     console.error(error);
   }

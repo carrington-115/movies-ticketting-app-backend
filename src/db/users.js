@@ -32,7 +32,7 @@ const getUsersByQuery = async (userData) => {
   session.startTransaction();
   try {
     const usersCollection = client.db("sample_mflix").collection("users");
-    const usersQueryResults = [];
+    let usersQueryResults;
     if (userData?.id !== "") {
       {
         usersQueryResults = usersCollection.aggregate([
