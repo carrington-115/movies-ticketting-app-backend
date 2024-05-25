@@ -34,11 +34,22 @@ const getUsersByQuery = async (userData) => {
   try {
     const usersCollection = client.db("sample_mflix").collection("users");
     let usersQueryResults;
-    usersQueryResults = await usersCollection.findOne({
-      _id: new ObjectId(id),
-      name: name,
-      email: email,
-    });
+    if (id === "") {
+      usersQueryResults = await usersCollection.findOne({
+        name: name,
+        email: email,
+      });
+    } else if (name === "" && email == "") {
+      usersQueryResults = await usersCollection.findOne({
+        _id: new ObjectId(id),
+      });
+    } else {
+      usersQueryResults = await usersCollection.findOne({
+        _id: new ObjectId(id),
+        name: name,
+        email: email,
+      });
+    }
 
     await session.commitTransaction();
     return usersQueryResults;
