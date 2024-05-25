@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const { client } = require("./client.config");
+const { client } = require("../client.config");
 
 const session = client.startSession();
 
