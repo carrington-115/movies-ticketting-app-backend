@@ -26,14 +26,10 @@ const getTheatersByAddress = async (theaterAddress) => {
       theaters = theatersCollection.aggregate([
         {
           $match: {
-            location: {
-              address: {
-                street1: street,
-                city: city,
-                zipcode: zipcode,
-                state: state,
-              },
-            },
+            "location.address.street1": street,
+            "location.address.city": city,
+            "location.address.zipcode": zipcode,
+            "location.address.state": state,
           },
         },
         { $limit: 50 },
@@ -61,9 +57,7 @@ const getTheatersByGPS = async (theaterGPS) => {
       theaters = theatersCollection.aggregate([
         {
           $match: {
-            geo: {
-              coordinates: { $in: [xCord, yCord] },
-            },
+            "location.geo.coordinates": [xCord, yCord],
           },
         },
       ]);

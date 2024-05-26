@@ -10,16 +10,26 @@ const {
   getAllUserComments,
 } = require("./functions/users");
 
+const {
+  getAllTheaters,
+  getTheatersByAddress,
+  getTheatersByGPS,
+} = require("./functions/theaters");
+
 const testFunc = async () => {
-  const userComments = await getAllUserComments({
-    name: "Taylor Scott",
-    email: "taylor_scott@fakegmail.com",
-    movieId: "573a139af29313caabceef40",
-  });
-  userComments.forEach((comment) => {
-    console.log(comment);
-  });
   try {
+    // const theaters = await getAllTheaters();
+    // const theaters = await getTheatersByAddress({
+    //   street: "45235 Worth Ave.",
+    //   city: "California",
+    //   state: "MD",
+    //   zipcode: "20619",
+    // });
+    const theaters = await getTheatersByGPS({
+      xCord: -92.480994,
+      yCord: 44.007071,
+    });
+    theaters.forEach((theater) => console.log(theater));
   } catch (error) {
     console.error(error);
   }
