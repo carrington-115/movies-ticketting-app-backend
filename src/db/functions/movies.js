@@ -70,25 +70,28 @@ const getMoviesWithId = async (movieData) => {
 const filterMoviesByTitleAndGenres = async (movieData) => {
   session.startTransaction();
   const { title, genres } = movieData;
+
   try {
     const moviesCollection = client.db("sample_mflix").collection("movies");
-    const movies = [];
-    if (title !== "") {
+    let movies;
+    if (title && !genres) {
       movies = moviesCollection.aggregate([
         {
           $match: {
             title: title,
           },
         },
+        { $limit: 50 },
         { $project: movieOutput },
       ]);
-    } else if (genres !== "") {
+    } else if (genres && !title) {
       movies = moviesCollection.aggregate([
         {
           $match: {
-            genres: genres,
+            genres: { $in: genres },
           },
         },
+        { $limit: 50 },
         { $project: movieOutput },
       ]);
     } else {
@@ -96,12 +99,14 @@ const filterMoviesByTitleAndGenres = async (movieData) => {
         {
           $match: {
             title: title,
-            genres: genres,
+            genres: { $in: genres },
           },
         },
+        { $limit: 50 },
         { $project: movieOutput },
       ]);
     }
+
     await session.commitTransaction();
     return movies;
   } catch (error) {
