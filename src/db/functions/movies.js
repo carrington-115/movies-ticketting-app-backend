@@ -117,8 +117,68 @@ const filterMoviesByTitleAndGenres = async (movieData) => {
   }
 };
 
+const filterMoviesWithDate = async (movieData) => {
+  session.startTransaction();
+  const { year, released, lastupdated } = movieData;
+  try {
+    const moviesCollection = client.db("sample_mflix").collection("movies");
+    let movies;
+    if (year) {
+      movies = moviesCollection.aggregate([
+        {
+          $match: {
+            year: { $eq: year },
+          },
+        },
+        { $limit: 50 },
+        { $project: movieOutput },
+      ]);
+    } else if (lastupdated) {
+      movies = moviesCollection.aggregate([
+        {
+          $match: {
+            lastupdated: { $eq: lastupdated },
+          },
+        },
+        { $limit: 50 },
+        { $project: movieOutput },
+      ]);
+    } else if (released) {
+      movies = moviesCollection.aggregate([
+        {
+          $match: {
+            released: { $eq: released },
+          },
+        },
+        { $limit: 50 },
+        { $project: movieOutput },
+      ]);
+    } else {
+      movies = moviesCollection.aggregate([
+        {
+          $match: {
+            year: { $eq: year },
+            lastupdated: { $eq: lastupdated },
+            released: { $eq: released },
+          },
+        },
+        { $limit: 50 },
+        { $project: movieOutput },
+      ]);
+    }
+    await session.commitTransaction();
+    return movies;
+  } catch (error) {
+    console.error(error);
+    await session.abortTransaction();
+  } finally {
+    await session.endSession();
+  }
+};
+
 module.exports = {
   getAllMovies,
   getMoviesWithId,
   filterMoviesByTitleAndGenres,
+  filterMoviesWithDate,
 };
