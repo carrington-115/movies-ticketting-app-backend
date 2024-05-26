@@ -4,17 +4,22 @@ const {
   filterMoviesByTitleAndGenres,
   filterMoviesWithDate,
 } = require("./functions/movies");
-const { getAllUsers, getUsersByQuery } = require("./functions/users");
+const {
+  getAllUsers,
+  getUsersByQuery,
+  getAllUserComments,
+} = require("./functions/users");
 
 const testFunc = async () => {
+  const userComments = await getAllUserComments({
+    name: "Taylor Scott",
+    email: "taylor_scott@fakegmail.com",
+    movieId: "573a139af29313caabceef40",
+  });
+  userComments.forEach((comment) => {
+    console.log(comment);
+  });
   try {
-    const movies = await filterMoviesWithDate({
-      year: 2000,
-      lastupdated: "2015-08-29 00:15:18.047000000",
-      released: "2000-02-18T00:00:00.000Z",
-    });
-    // console.log(movies);
-    movies.forEach((movie) => console.log(movie));
   } catch (error) {
     console.error(error);
   }

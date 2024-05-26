@@ -61,4 +61,44 @@ const getUsersByQuery = async (userData) => {
   }
 };
 
-module.exports = { getAllUsers, getUsersByQuery };
+const getAllUserComments = async (userData) => {
+  const { name, email, movieId } = userData;
+  session.startTransaction();
+  try {
+    const commentsCollection = client.db("sample_mflix").collection("comments");
+    let userComments;
+    if (!movieId) {
+      userComments = commentsCollection.aggregate([
+        {
+          $match: {
+            name: name,
+            email: email,
+          },
+        },
+        { $limit: 50 },
+      ]);
+    } else {
+      userComments = commentsCollection.aggregate([
+        {
+          $match: {
+            $and: [
+              { name: name },
+              { email: email },
+              { movie_id: new ObjectId(movieId) },
+            ],
+          },
+        },
+        { $limit: 50 },
+      ]);
+    }
+    await session.commitTransaction();
+    return userComments;
+  } catch (error) {
+    console.error(error);
+    await session.abortTransaction();
+  } finally {
+    await session.endSession();
+  }
+};
+
+module.exports = { getAllUsers, getUsersByQuery, getAllUserComments };

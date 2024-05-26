@@ -23,3 +23,14 @@ git push
 ```
 
 ## Documentation
+
+### The database documentation
+
+- The database files are found in this directory from the project root
+
+```bash
+./src/db
+
+```
+
+- This file contains the tes
