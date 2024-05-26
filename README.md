@@ -71,6 +71,7 @@ The example above just prints all the users to the console
 - _Parameters_: This function accepts an object as a parameter, `userData`. This object has 3 main fields which are all string data typee: `id, name, email`
 - _Returns_: This function returns a result, `usersQueryResults`. This result is an array of all the user data that has been retrieved from the database. This array data can be retrieved by using the `.forEach` array method.
 - _Usage_: To use this function we follow 3 main approaches: by querying just with id, by querying with name and email, and by querying with id, name and email. below is an example that was performed in the `app.test.js` file
+- _Raises_: This function will raise an error if the value of the id in the function argument of any of the field is `null, undefined, or ''`. So make sure that when using a field for query, let the data be valid.
 
 ```javascript
 const { getUsersByQuery } = require("./functions/users");
@@ -92,4 +93,25 @@ const testFunc = async () => {
 
 3. **getAllUserComments**
 
-- _Description_
+- _Description_: This function is used for two main purposes: To return all the comments that the user has written in the database and to return all the comments that the user has written about a particular movie.
+- _Parameters_: This function also takes the `userData` parameter that has 3 fields in this case: the name, email, and movieId.
+- _Return_: This function returns an array of the comment that the users has performed since the aggregation is done on the comments database. To access the comments, the `.forEach` method is used.
+- _Usage_: This function can be used by the method below:
+
+```javascript
+const { getAllUserComments } = require("./functions/users");
+
+const testFunc = async () => {
+  try {
+    const comments = await getAllUserComments({
+      name: "name",
+      email: "email",
+      movieId: "movieId",
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+```
+
+- _Raises_: This function will raise an error if the value of the id in the function argument of any of the field is `null, undefined, or ''`. So make sure that when using a field for query, let the data be valid.
