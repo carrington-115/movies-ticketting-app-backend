@@ -44,9 +44,9 @@ const getAllMovies = async () => {
   }
 };
 
-const getMoviesWithId = async (userData) => {
+const getMoviesWithId = async (movieData) => {
   session.startTransaction();
-  const { id } = userData;
+  const { id } = movieData;
   try {
     const allMovies = client.db("sample_mflix").collection("movies");
     const movie = allMovies.aggregate([
@@ -67,4 +67,53 @@ const getMoviesWithId = async (userData) => {
   }
 };
 
-module.exports = { getAllMovies, getMoviesWithId };
+const filterMoviesByTitleAndGenres = async (movieData) => {
+  session.startTransaction();
+  const { title, genres } = movieData;
+  try {
+    const moviesCollection = client.db("sample_mflix").collection("movies");
+    const movies = [];
+    if (title !== "") {
+      movies = moviesCollection.aggregate([
+        {
+          $match: {
+            title: title,
+          },
+        },
+        { $project: movieOutput },
+      ]);
+    } else if (genres !== "") {
+      movies = moviesCollection.aggregate([
+        {
+          $match: {
+            genres: genres,
+          },
+        },
+        { $project: movieOutput },
+      ]);
+    } else {
+      movies = moviesCollection.aggregate([
+        {
+          $match: {
+            title: title,
+            genres: genres,
+          },
+        },
+        { $project: movieOutput },
+      ]);
+    }
+    await session.commitTransaction();
+    return movies;
+  } catch (error) {
+    console.error(error);
+    await session.abortTransaction();
+  } finally {
+    await session.endSession();
+  }
+};
+
+module.exports = {
+  getAllMovies,
+  getMoviesWithId,
+  filterMoviesByTitleAndGenres,
+};
