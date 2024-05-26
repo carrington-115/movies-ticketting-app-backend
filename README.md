@@ -64,3 +64,32 @@ const testFunc = async () => {
 The example above just prints all the users to the console
 
 - _Raises_: The functions might raise an error you try to access the user array directly without using the `.forEach` function. It is suitable to follow the approach **above**
+
+2. **getUsersByQuery**
+
+- _Description_: This function is used to query the users database and get data based on the query parameters. There are 3 main query parameters in this situation: id, name, email. The querying results are controlled by and if-elseif-else condition.
+- _Parameters_: This function accepts an object as a parameter, `userData`. This object has 3 main fields which are all string data typee: `id, name, email`
+- _Returns_: This function returns a result, `usersQueryResults`. This result is an array of all the user data that has been retrieved from the database. This array data can be retrieved by using the `.forEach` array method.
+- _Usage_: To use this function we follow 3 main approaches: by querying just with id, by querying with name and email, and by querying with id, name and email. below is an example that was performed in the `app.test.js` file
+
+```javascript
+const { getUsersByQuery } = require("./functions/users");
+
+const testFunc = async () => {
+  try {
+    // this query is only with id
+    // we can run more query with name and email
+    const users = await getUsersByQuery({
+      id: "59b99db4cfa9a34dcd7885b6",
+    });
+
+    users.forEach((user) => console.log(user));
+  } catch (error) {
+    console.error(error);
+  }
+};
+```
+
+3. **getAllUserComments**
+
+- _Description_
