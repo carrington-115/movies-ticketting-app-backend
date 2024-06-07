@@ -1,24 +1,20 @@
 require("dotenv").config({ path: "../../../.env" });
 const { MongoClient, ObjectId } = require("mongodb");
 const client = new MongoClient(process.env.API_KEY);
+const bcrypt = require("bcrypt");
 const clientSession = client.startSession();
-const dbName = "accounts";
 const accountCollection = client
   .db(process.env.ACCOUNT_COL)
   .collection("users");
 
 class DatabaseAuth {
-  constructor(username, id, password) {
-    this.username = username;
-    this.id = id;
-    this.password = password;
-  }
+  constructor() {}
 
-  async getUserByUsername() {
+  async getUserByUsername(username) {
     clientSession.startTransaction();
     try {
       await clientSession.commitTransaction();
-      const user = await accountCollection.findOne({ username: this.username });
+      const user = await accountCollection.findOne({ username: username });
       return user;
     } catch (error) {
       await clientSession.abortTransaction();
@@ -27,11 +23,11 @@ class DatabaseAuth {
       await clientSession.endSession();
     }
   }
-  async getUserById() {
+  async getUserById(id) {
     clientSession.startTransaction();
     try {
       await clientSession.commitTransaction();
-      const user = await accountCollection.findOne({ _id: ObjectId(this.id) });
+      const user = await accountCollection.findOne({ _id: ObjectId(id) });
       return user;
     } catch (error) {
       await clientSession.abortTransaction();
@@ -40,13 +36,14 @@ class DatabaseAuth {
       await clientSession.endSession();
     }
   }
-  async createUser() {
+  async createUser(username, password) {
     clientSession.startTransaction();
     try {
       await clientSession.commitTransaction();
+      const hashedPassword = await bcrypt.hash(password, 12);
       const newUser = await accountCollection.insertOne({
-        username: this.username,
-        password: this.password,
+        username: username,
+        password: hashedPassword,
       });
       return newUser.insertedId;
     } catch (error) {
