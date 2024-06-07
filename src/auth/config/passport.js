@@ -8,10 +8,12 @@ passport.use(
   LocalStrategy(async (username, password, done) => {
     try {
       const user = await User.getUserByUsername(username);
-      if (!user) return done({ message: "The username does not exist" });
+      if (!user)
+        return done(null, false, { message: "The username does not exist" });
       const isMatch = await bcrypt.compare(user.password, password);
-      if (!isMatch) return done({ message: "The password is incorrect" });
-      return user;
+      if (!isMatch)
+        return done(null, false, { message: "The password is incorrect" });
+      return done(null, user);
     } catch (error) {
       return done(error);
     }
@@ -25,8 +27,12 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-  const user = await User.getUserById(id);
-  done(null, user);
+  try {
+    const user = await User.getUserById(id);
+    done(null, user);
+  } catch (err) {
+    return done(null, err);
+  }
 });
 
 module.exports = passport;

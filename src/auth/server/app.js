@@ -7,6 +7,12 @@ const MongoStore = require("connect-mongo");
 const { MongoClient } = require("mongodb");
 const client = new MongoClient(process.env.API_KEY);
 const authRouter = require("./routes");
+const passport = require("../config/passport");
+
+client
+  .connect()
+  .then(() => console.log("The database client is connected"))
+  .catch((err) => console.error(err));
 
 app.use([
   express.json(),
@@ -15,10 +21,12 @@ app.use([
     secret: "my secret key",
     saveUninitialized: true,
     resave: false,
-    store: new MongoStore({ client: client, dbName: process.env.DB_NAME }),
+    store: MongoStore.create({ client: client, dbName: process.env.DB_NAME }),
     cookie: { secure: false },
   }),
   cookieParser(),
+  passport.initialize(),
+  passport.session(),
 ]);
 
 app.use("/auth", authRouter);
